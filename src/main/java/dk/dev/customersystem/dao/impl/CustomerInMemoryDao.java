@@ -5,37 +5,61 @@ import dk.dev.customersystem.model.Customer;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
 public class CustomerInMemoryDao implements CustomerDao {
+
+    private final AtomicLong currentId = new AtomicLong(0);
+    private final Map<Long, Customer> customers = new ConcurrentHashMap<>();
+
     @Override
     public Customer save(Customer customer) {
-        return null;
+        if(!existsById(customer.getId())) {
+            Long id = currentId.incrementAndGet();
+            customer.setId(id);
+        }
+        customers.put(customer.getId(), customer);
+        return customer;
     }
 
     @Override
     public void delete(Long id) {
-
+        customers.remove(id);
     }
 
     @Override
     public Optional<Customer> findById(Long id) {
-        return Optional.empty();
+        if (!existsById(id)) {
+            return Optional.empty();
+        }else{
+            return Optional.of(customers.get(id));
+        }
     }
 
     @Override
     public List<Customer> findAll() {
-        return List.of();
+        return customers.values()
+                .stream().toList();
     }
 
     @Override
     public List<Customer> findByNameIgnoreCase(String name) {
-        return List.of();
+        return customers.values()
+                .stream()
+                .filter(customer -> customer.getName() != null &&
+                        customer.getName().equalsIgnoreCase(name))
+                .toList();
     }
 
     @Override
     public boolean existsById(Long id) {
-        return false;
+        if (id == null) {
+            return false;
+        }else
+            return customers.containsKey(id);
     }
 }
