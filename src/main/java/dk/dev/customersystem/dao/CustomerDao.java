@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface CustomerDao {
     Customer save(Customer customer);
-    void delete(Long id);
+    void deleteById(Long id);
     Optional<Customer> findById(Long id);
     List<Customer> findAll();
     List<Customer> findByNameIgnoreCase(String name);
