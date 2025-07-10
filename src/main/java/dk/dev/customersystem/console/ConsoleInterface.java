@@ -76,7 +76,7 @@ public class ConsoleInterface {
             realCustomer.setFamily(scanner.nextLine());
             System.out.print("Enter phone number: ");
             realCustomer.setPhoneNumber(scanner.nextLine());
-            System.out.println("Enter nationality: ");
+            System.out.print("Enter nationality: ");
             realCustomer.setNationality(scanner.nextLine());
             realCustomer.setType(CustomerType.REAL);
             CustomerDto updatedCustomer = facade.updateCustomer(id, realCustomer);
@@ -120,7 +120,7 @@ public class ConsoleInterface {
             realCustomer.setFamily(scanner.nextLine());
             System.out.print("Enter phone number: ");
             realCustomer.setPhoneNumber(scanner.nextLine());
-            System.out.println("Enter nationality: ");
+            System.out.print("Enter nationality: ");
             realCustomer.setNationality(scanner.nextLine());
             realCustomer.setType(CustomerType.REAL);
             CustomerDto addedCustomer = facade.addCustomer(realCustomer);
