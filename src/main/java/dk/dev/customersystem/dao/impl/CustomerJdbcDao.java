@@ -20,7 +20,7 @@ import java.util.Optional;
 
 @Repository
 @Primary
-@Profile("h2")
+@Profile("jdbc")
 public class CustomerJdbcDao implements CustomerDao {
 
 
