@@ -1,12 +1,19 @@
 package dk.dev.customersystem.controller;
 
 import dk.dev.customersystem.dto.CustomerDto;
+import dk.dev.customersystem.dto.LegalCustomerDto;
+import dk.dev.customersystem.dto.RealCustomerDto;
 import dk.dev.customersystem.facade.CustomerFacade;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -43,5 +50,46 @@ public class CustomerController {
             return "Customer with id " + id + " was deleted";
         }else
             return "Customer with id " + id + " could not be deleted";
+    }
+
+    @Operation(summary = "Add a new customer", description = "Create a new customer")
+    @PostMapping
+    public CustomerDto addCustomer(@io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "customer object to be added",
+            required = true,
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(
+                            oneOf = {
+                                    RealCustomerDto.class,
+                                    LegalCustomerDto.class
+                            }
+                    ),
+                    examples = {
+                            @ExampleObject(
+                                    name = "Real Customer Example",
+                                    value = "{"
+                                            + "\"name\": \"John\","
+                                            + "\"family\": \"Doe\","
+                                            + "\"phoneNumber\": \"+1234567890\","
+                                            + "\"type\": \"REAL\","
+                                            + "\"nationality\": \"British\""
+                                            + "}"
+                            ),
+                            @ExampleObject(
+                                    name = "Legal Customer Example",
+                                    value = "{"
+                                            + "\"name\": \"John\","
+                                            + "\"family\": \"Doe\","
+                                            + "\"phoneNumber\": \"+1234567890\","
+                                            + "\"type\": \"LEGAL\","
+                                            + "\"industry\": \"Tech\""
+                                            + "}"
+                            )
+                    }
+            )
+    )
+            @RequestBody CustomerDto customer) {
+        return facade.addCustomer(customer);
     }
 }
