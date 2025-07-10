@@ -4,6 +4,7 @@ import dk.dev.customersystem.dto.CustomerDto;
 import dk.dev.customersystem.facade.CustomerFacade;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,5 +33,15 @@ public class CustomerController {
     @GetMapping("/{id}")
     public CustomerDto getCustomerById(@PathVariable Long id) {
         return facade.getCustomerById(id);
+    }
+
+    @Operation(summary = "Delete a customer by id", description = "Remove a customer from customer system")
+    @DeleteMapping("/{id}")
+    public String deleteCustomer(@PathVariable Long id) {
+        boolean isDeleted = facade.deleteCustomer(id);
+        if (isDeleted) {
+            return "Customer with id " + id + " was deleted";
+        }else
+            return "Customer with id " + id + " could not be deleted";
     }
 }
