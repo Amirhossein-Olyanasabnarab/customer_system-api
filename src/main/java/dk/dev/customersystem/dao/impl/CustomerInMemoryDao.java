@@ -2,6 +2,7 @@ package dk.dev.customersystem.dao.impl;
 
 import dk.dev.customersystem.dao.CustomerDao;
 import dk.dev.customersystem.model.Customer;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
+
 public class CustomerInMemoryDao implements CustomerDao {
 
     private final AtomicLong currentId = new AtomicLong(0);

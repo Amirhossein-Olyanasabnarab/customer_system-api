@@ -8,12 +8,14 @@ import dk.dev.customersystem.dto.RealCustomerDto;
 import dk.dev.customersystem.enums.CustomerType;
 import dk.dev.customersystem.facade.CustomerFacade;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Scanner;
 
 @Component
+@Profile("console")
 public class ConsoleInterface {
 
    private final CustomerFacade facade;
