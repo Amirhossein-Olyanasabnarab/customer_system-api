@@ -20,19 +20,19 @@ public class CustomerService {
         this.customerDao = customerDao;
     }
 
-    @PostConstruct
-    public void init() {
-
-        addCustomer(RealCustomer.builder()
-                .id(1L)
-                .name("Oliver")
-                .family("Kahn")
-                .phoneNumber("+49 123 45 67")
-                .type(CustomerType.REAL)
-                .nationality("German")
-                .build()
-        );
-    }
+//    @PostConstruct
+//    public void init() {
+//
+//        addCustomer(RealCustomer.builder()
+//                .id(1L)
+//                .name("Oliver")
+//                .family("Kahn")
+//                .phoneNumber("+49 123 45 67")
+//                .type(CustomerType.REAL)
+//                .nationality("German")
+//                .build()
+//        );
+//    }
 
     public Customer addCustomer(Customer customer) {
         return customerDao.save(customer);
