@@ -136,4 +136,10 @@ public class CustomerController {
                                       @RequestBody CustomerDto customer) {
         return facade.updateCustomer(id, customer);
     }
+
+    @Operation(summary = "Get customers by name", description = "Retrieve a list of customers by their name")
+    @GetMapping("/name/{name}")
+    public List<CustomerDto> getCustomerByName(@PathVariable String name) {
+        return facade.getCustomersByName(name);
+    }
 }
