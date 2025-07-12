@@ -6,6 +6,7 @@ import dk.dev.customersystem.dto.RealCustomerDto;
 import dk.dev.customersystem.exception.CustomerNotFoundException;
 import dk.dev.customersystem.facade.CustomerFacade;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -57,17 +58,17 @@ public class CustomerController {
                             )
                     )),
             @ApiResponse(responseCode = "404", description = "Customer not found",
-            content = @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = ErrorResponse.class)
-            ))
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    ))
     })
     public ResponseEntity<?> getCustomerById(@PathVariable Long id) {
         try {
             CustomerDto customerDto = facade.getCustomerById(id);
             return ResponseEntity.status(HttpStatus.OK)
                     .body(customerDto);
-        }catch (CustomerNotFoundException e){
+        } catch (CustomerNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(e.getMessage());
         }
@@ -78,10 +79,10 @@ public class CustomerController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Remove a customer from the customer system"),
             @ApiResponse(responseCode = "204", description = "Customer not found",
-                content = @Content(
-                        schema = @Schema(implementation = ErrorResponse.class),
-                        mediaType = "application/json"
-                )
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            mediaType = "application/json"
+                    )
             )
     })
     public ResponseEntity<String> deleteCustomer(@PathVariable Long id) {
@@ -95,93 +96,164 @@ public class CustomerController {
     }
 
 
-@Operation(summary = "Add a new customer", description = "Create a new customer")
-@PostMapping
-public CustomerDto addCustomer(@io.swagger.v3.oas.annotations.parameters.RequestBody(
-        description = "customer object to be added",
-        required = true,
-        content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(
-                        oneOf = {
-                                RealCustomerDto.class,
-                                LegalCustomerDto.class
-                        }
-                ),
-                examples = {
-                        @ExampleObject(
-                                name = "Real Customer Example",
-                                value = "{"
-                                        + "\"name\": \"John\","
-                                        + "\"family\": \"Doe\","
-                                        + "\"phoneNumber\": \"+1234567890\","
-                                        + "\"type\": \"REAL\","
-                                        + "\"nationality\": \"British\""
-                                        + "}"
-                        ),
-                        @ExampleObject(
-                                name = "Legal Customer Example",
-                                value = "{"
-                                        + "\"name\": \"John\","
-                                        + "\"family\": \"Doe\","
-                                        + "\"phoneNumber\": \"+1234567890\","
-                                        + "\"type\": \"LEGAL\","
-                                        + "\"industry\": \"Tech\""
-                                        + "}"
-                        )
-                }
-        )
-)
-                               @RequestBody CustomerDto customer) {
-    return facade.addCustomer(customer);
-}
+    @Operation(summary = "Add a new customer", description = "Create a new customer")
+    @PostMapping
+    public CustomerDto addCustomer(@io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "customer object to be added",
+            required = true,
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(
+                            oneOf = {
+                                    RealCustomerDto.class,
+                                    LegalCustomerDto.class
+                            }
+                    ),
+                    examples = {
+                            @ExampleObject(
+                                    name = "Real Customer Example",
+                                    value = "{"
+                                            + "\"name\": \"John\","
+                                            + "\"family\": \"Doe\","
+                                            + "\"phoneNumber\": \"+1234567890\","
+                                            + "\"type\": \"REAL\","
+                                            + "\"nationality\": \"British\""
+                                            + "}"
+                            ),
+                            @ExampleObject(
+                                    name = "Legal Customer Example",
+                                    value = "{"
+                                            + "\"name\": \"John\","
+                                            + "\"family\": \"Doe\","
+                                            + "\"phoneNumber\": \"+1234567890\","
+                                            + "\"type\": \"LEGAL\","
+                                            + "\"industry\": \"Tech\""
+                                            + "}"
+                            )
+                    }
+            )
+    )
+                                   @RequestBody CustomerDto customer) {
+        return facade.addCustomer(customer);
+    }
 
 
-@Operation(summary = "Update an existing customer", description = "Update the details of an existing customer")
-@PutMapping("/{id}")
-public CustomerDto updateCustomer(@PathVariable Long id,
-                                  @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                                          description = "Updated customer object",
-                                          required = true,
-                                          content = @Content(
-                                                  mediaType = "application/json",
-                                                  schema = @Schema(
-                                                          oneOf = {
-                                                                  RealCustomerDto.class,
-                                                                  LegalCustomerDto.class
-                                                          }
-                                                  ),
-                                                  examples = {
-                                                          @ExampleObject(
-                                                                  name = "Real Customer Example",
-                                                                  value = "{"
-                                                                          + "\"name\": \"John\","
-                                                                          + "\"family\": \"Doe\","
-                                                                          + "\"phoneNumber\": \"+1234567890\","
-                                                                          + "\"type\": \"REAL\","
-                                                                          + "\"nationality\": \"British\""
-                                                                          + "}"
-                                                          ),
-                                                          @ExampleObject(
-                                                                  name = "Legal Customer Example",
-                                                                  value = "{"
-                                                                          + "\"name\": \"John\","
-                                                                          + "\"family\": \"Doe\","
-                                                                          + "\"phoneNumber\": \"+1234567890\","
-                                                                          + "\"type\": \"LEGAL\","
-                                                                          + "\"industry\": \"Tech\""
-                                                                          + "}"
-                                                          )
-                                                  }
-                                          )
-                                  )
-                                  @RequestBody CustomerDto customer) {
-    return facade.updateCustomer(id, customer);
-}
+    @Operation(summary = "Update an existing customer", description = "Update the details of an existing customer")
+    @PutMapping("/{id}")
+    public CustomerDto updateCustomer(@PathVariable Long id,
+                                      @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                                              description = "Updated customer object",
+                                              required = true,
+                                              content = @Content(
+                                                      mediaType = "application/json",
+                                                      schema = @Schema(
+                                                              oneOf = {
+                                                                      RealCustomerDto.class,
+                                                                      LegalCustomerDto.class
+                                                              }
+                                                      ),
+                                                      examples = {
+                                                              @ExampleObject(
+                                                                      name = "Real Customer Example",
+                                                                      value = "{"
+                                                                              + "\"name\": \"John\","
+                                                                              + "\"family\": \"Doe\","
+                                                                              + "\"phoneNumber\": \"+1234567890\","
+                                                                              + "\"type\": \"REAL\","
+                                                                              + "\"nationality\": \"British\""
+                                                                              + "}"
+                                                              ),
+                                                              @ExampleObject(
+                                                                      name = "Legal Customer Example",
+                                                                      value = "{"
+                                                                              + "\"name\": \"John\","
+                                                                              + "\"family\": \"Doe\","
+                                                                              + "\"phoneNumber\": \"+1234567890\","
+                                                                              + "\"type\": \"LEGAL\","
+                                                                              + "\"industry\": \"Tech\""
+                                                                              + "}"
+                                                              )
+                                                      }
+                                              )
+                                      )
+                                      @RequestBody CustomerDto customer) {
+        return facade.updateCustomer(id, customer);
+    }
 
-@Operation(summary = "Get customers by name", description = "Retrieve a list of customers by their name")
-@GetMapping("/name/{name}")
-public List<CustomerDto> getCustomerByName(@PathVariable String name) {
-    return facade.getCustomersByName(name);
-}
+    @Operation(summary = "Get customers by name", description = "Retrieve a list of customers by their name")
+    @GetMapping("/name/{name}")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    content = @Content(
+                            mediaType = "application/json",
+                            array = @ArraySchema(
+                                    schema = @Schema(
+                                            oneOf = {
+                                                    RealCustomerDto.class,
+                                                    LegalCustomerDto.class
+                                            }
+                                    )
+                            ),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "Real Customer Example",
+                                            value = "{"
+                                                    + "\"name\": \"John\","
+                                                    + "\"family\": \"Doe\","
+                                                    + "\"phoneNumber\": \"+1234567890\","
+                                                    + "\"type\": \"REAL\","
+                                                    + "\"nationality\": \"British\""
+                                                    + "}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "Legal Customer Example",
+                                            value = "{"
+                                                    + "\"name\": \"John\","
+                                                    + "\"family\": \"Doe\","
+                                                    + "\"phoneNumber\": \"+1234567890\","
+                                                    + "\"type\": \"LEGAL\","
+                                                    + "\"industry\": \"Tech\""
+                                                    + "}"
+                                    )
+                            }
+                    )
+            ),
+            @ApiResponse(responseCode = "404",
+                description = "No customers found with the given name",content = @Content(
+                        mediaType = "application/json",
+                        schema = @Schema(implementation = ErrorResponse.class),
+                    examples = {
+                            @ExampleObject(
+                                    name = "Real Customer Example",
+                                    value = "{"
+                                            + "\"name\": \"John\","
+                                            + "\"family\": \"Doe\","
+                                            + "\"phoneNumber\": \"+1234567890\","
+                                            + "\"type\": \"REAL\","
+                                            + "\"nationality\": \"British\""
+                                            + "}"
+                            ),
+                            @ExampleObject(
+                                    name = "Legal Customer Example",
+                                    value = "{"
+                                            + "\"name\": \"John\","
+                                            + "\"family\": \"Doe\","
+                                            + "\"phoneNumber\": \"+1234567890\","
+                                            + "\"type\": \"LEGAL\","
+                                            + "\"industry\": \"Tech\""
+                                            + "}"
+                            )
+                    }
+                )
+            )
+    })
+    public ResponseEntity<?> getCustomerByName(@PathVariable String name) {
+        List<CustomerDto> customers = facade.getCustomersByName(name);
+        if (customers.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("No customers were found with the name of " + name);
+        }
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(customers);
+    }
 }
