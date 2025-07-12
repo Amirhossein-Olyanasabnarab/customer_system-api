@@ -1,6 +1,7 @@
 package dk.dev.customersystem.facade;
 
 import dk.dev.customersystem.dto.CustomerDto;
+import dk.dev.customersystem.exception.CustomerNotFoundException;
 import dk.dev.customersystem.mapper.CustomerMapper;
 import dk.dev.customersystem.model.Customer;
 import dk.dev.customersystem.service.CustomerService;
@@ -40,7 +41,7 @@ public class CustomerFacade {
     public CustomerDto getCustomerById(Long id) {
         Optional<Customer> entity = customerService.getCustomerById(id);
         return entity.map(customerMapper::toDto)
-                .orElse(null);
+                .orElseThrow(() -> new CustomerNotFoundException("Customer not found with id " + id));
     }
 
     public List<CustomerDto> getAllCustomers() {
