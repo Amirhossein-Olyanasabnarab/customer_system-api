@@ -8,9 +8,12 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,6 +50,15 @@ public class CustomerController {
 
     @Operation(summary = "Delete a customer by id", description = "Remove a customer from customer system")
     @DeleteMapping("/{id}")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Remove a customer from the customer system"),
+            @ApiResponse(responseCode = "204", description = "Customer not found",
+                content = @Content(
+                        schema = @Schema(implementation = ErrorResponse.class),
+                        mediaType = "application/json"
+                )
+            )
+    })
     public ResponseEntity<String> deleteCustomer(@PathVariable Long id) {
         boolean isDeleted = facade.deleteCustomer(id);
         if (isDeleted) {
