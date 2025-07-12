@@ -3,6 +3,7 @@ package dk.dev.customersystem.controller;
 import dk.dev.customersystem.dto.CustomerDto;
 import dk.dev.customersystem.dto.LegalCustomerDto;
 import dk.dev.customersystem.dto.RealCustomerDto;
+import dk.dev.customersystem.exception.CustomerNotFoundException;
 import dk.dev.customersystem.facade.CustomerFacade;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -44,8 +45,32 @@ public class CustomerController {
 
     @Operation(summary = "Get a customer by id", description = "Retrieve a customer by id")
     @GetMapping("/{id}")
-    public CustomerDto getCustomerById(@PathVariable Long id) {
-        return facade.getCustomerById(id);
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Customer found",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(
+                                    oneOf = {
+                                            RealCustomerDto.class,
+                                            LegalCustomerDto.class
+                                    }
+                            )
+                    )),
+            @ApiResponse(responseCode = "404", description = "Customer not found",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ErrorResponse.class)
+            ))
+    })
+    public ResponseEntity<?> getCustomerById(@PathVariable Long id) {
+        try {
+            CustomerDto customerDto = facade.getCustomerById(id);
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(customerDto);
+        }catch (CustomerNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(e.getMessage());
+        }
     }
 
     @Operation(summary = "Delete a customer by id", description = "Remove a customer from customer system")
