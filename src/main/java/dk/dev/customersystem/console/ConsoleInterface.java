@@ -38,7 +38,8 @@ public class ConsoleInterface {
             System.out.println("3. Add a new customer");
             System.out.println("4. Update a customer");
             System.out.println("5. Delete a customer");
-            System.out.println("6. Exit");
+            System.out.println("6. Find customers by name");
+            System.out.println("0. Exit");
             System.out.print("Enter your choice: ");
 
             int choice = Integer.parseInt(scanner.nextLine());
@@ -49,13 +50,21 @@ public class ConsoleInterface {
                 case 3 -> addCustomer();
                 case 4 -> updateCustomer();
                 case 5 -> deleteCustomer();
-                case 6 -> {
+                case 6 -> findCustomerByName();
+                case 0 -> {
                     System.out.println("Exiting...");
                     return;
                 }
                 default -> System.out.println("Invalid choice. Please try again.");
             }
         }
+    }
+
+    private void findCustomerByName() {
+        System.out.print("Enter customer name: ");
+        String customerName = scanner.nextLine();
+        List<CustomerDto> customers = facade.getCustomersByName(customerName);
+        customers.forEach(this::printJsonObject);
     }
 
     private void deleteCustomer() {
