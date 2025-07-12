@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,101 +47,104 @@ public class CustomerController {
 
     @Operation(summary = "Delete a customer by id", description = "Remove a customer from customer system")
     @DeleteMapping("/{id}")
-    public String deleteCustomer(@PathVariable Long id) {
+    public ResponseEntity<String> deleteCustomer(@PathVariable Long id) {
         boolean isDeleted = facade.deleteCustomer(id);
         if (isDeleted) {
-            return "Customer with id " + id + " was deleted";
-        }else
-            return "Customer with id " + id + " could not be deleted";
-    }
-
-    @Operation(summary = "Add a new customer", description = "Create a new customer")
-    @PostMapping
-    public CustomerDto addCustomer(@io.swagger.v3.oas.annotations.parameters.RequestBody(
-            description = "customer object to be added",
-            required = true,
-            content = @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(
-                            oneOf = {
-                                    RealCustomerDto.class,
-                                    LegalCustomerDto.class
-                            }
-                    ),
-                    examples = {
-                            @ExampleObject(
-                                    name = "Real Customer Example",
-                                    value = "{"
-                                            + "\"name\": \"John\","
-                                            + "\"family\": \"Doe\","
-                                            + "\"phoneNumber\": \"+1234567890\","
-                                            + "\"type\": \"REAL\","
-                                            + "\"nationality\": \"British\""
-                                            + "}"
-                            ),
-                            @ExampleObject(
-                                    name = "Legal Customer Example",
-                                    value = "{"
-                                            + "\"name\": \"John\","
-                                            + "\"family\": \"Doe\","
-                                            + "\"phoneNumber\": \"+1234567890\","
-                                            + "\"type\": \"LEGAL\","
-                                            + "\"industry\": \"Tech\""
-                                            + "}"
-                            )
-                    }
-            )
-    )
-            @RequestBody CustomerDto customer) {
-        return facade.addCustomer(customer);
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body("Customer deleted successfully");
+        } else
+            return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                    .body("Customer not deleted successfully");
     }
 
 
-    @Operation(summary = "Update an existing customer", description = "Update the details of an existing customer")
-    @PutMapping("/{id}")
-    public CustomerDto updateCustomer(@PathVariable Long id,
-                                      @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                                              description = "Updated customer object",
-                                              required = true,
-                                              content = @Content(
-                                                      mediaType = "application/json",
-                                                      schema = @Schema(
-                                                              oneOf = {
-                                                                      RealCustomerDto.class,
-                                                                      LegalCustomerDto.class
-                                                              }
-                                                      ),
-                                                      examples = {
-                                                              @ExampleObject(
-                                                                      name = "Real Customer Example",
-                                                                      value = "{"
-                                                                              + "\"name\": \"John\","
-                                                                              + "\"family\": \"Doe\","
-                                                                              + "\"phoneNumber\": \"+1234567890\","
-                                                                              + "\"type\": \"REAL\","
-                                                                              + "\"nationality\": \"British\""
-                                                                              + "}"
-                                                              ),
-                                                              @ExampleObject(
-                                                                      name = "Legal Customer Example",
-                                                                      value = "{"
-                                                                              + "\"name\": \"John\","
-                                                                              + "\"family\": \"Doe\","
-                                                                              + "\"phoneNumber\": \"+1234567890\","
-                                                                              + "\"type\": \"LEGAL\","
-                                                                              + "\"industry\": \"Tech\""
-                                                                              + "}"
-                                                              )
-                                                      }
-                                              )
-                                      )
-                                      @RequestBody CustomerDto customer) {
-        return facade.updateCustomer(id, customer);
-    }
+@Operation(summary = "Add a new customer", description = "Create a new customer")
+@PostMapping
+public CustomerDto addCustomer(@io.swagger.v3.oas.annotations.parameters.RequestBody(
+        description = "customer object to be added",
+        required = true,
+        content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(
+                        oneOf = {
+                                RealCustomerDto.class,
+                                LegalCustomerDto.class
+                        }
+                ),
+                examples = {
+                        @ExampleObject(
+                                name = "Real Customer Example",
+                                value = "{"
+                                        + "\"name\": \"John\","
+                                        + "\"family\": \"Doe\","
+                                        + "\"phoneNumber\": \"+1234567890\","
+                                        + "\"type\": \"REAL\","
+                                        + "\"nationality\": \"British\""
+                                        + "}"
+                        ),
+                        @ExampleObject(
+                                name = "Legal Customer Example",
+                                value = "{"
+                                        + "\"name\": \"John\","
+                                        + "\"family\": \"Doe\","
+                                        + "\"phoneNumber\": \"+1234567890\","
+                                        + "\"type\": \"LEGAL\","
+                                        + "\"industry\": \"Tech\""
+                                        + "}"
+                        )
+                }
+        )
+)
+                               @RequestBody CustomerDto customer) {
+    return facade.addCustomer(customer);
+}
 
-    @Operation(summary = "Get customers by name", description = "Retrieve a list of customers by their name")
-    @GetMapping("/name/{name}")
-    public List<CustomerDto> getCustomerByName(@PathVariable String name) {
-        return facade.getCustomersByName(name);
-    }
+
+@Operation(summary = "Update an existing customer", description = "Update the details of an existing customer")
+@PutMapping("/{id}")
+public CustomerDto updateCustomer(@PathVariable Long id,
+                                  @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                                          description = "Updated customer object",
+                                          required = true,
+                                          content = @Content(
+                                                  mediaType = "application/json",
+                                                  schema = @Schema(
+                                                          oneOf = {
+                                                                  RealCustomerDto.class,
+                                                                  LegalCustomerDto.class
+                                                          }
+                                                  ),
+                                                  examples = {
+                                                          @ExampleObject(
+                                                                  name = "Real Customer Example",
+                                                                  value = "{"
+                                                                          + "\"name\": \"John\","
+                                                                          + "\"family\": \"Doe\","
+                                                                          + "\"phoneNumber\": \"+1234567890\","
+                                                                          + "\"type\": \"REAL\","
+                                                                          + "\"nationality\": \"British\""
+                                                                          + "}"
+                                                          ),
+                                                          @ExampleObject(
+                                                                  name = "Legal Customer Example",
+                                                                  value = "{"
+                                                                          + "\"name\": \"John\","
+                                                                          + "\"family\": \"Doe\","
+                                                                          + "\"phoneNumber\": \"+1234567890\","
+                                                                          + "\"type\": \"LEGAL\","
+                                                                          + "\"industry\": \"Tech\""
+                                                                          + "}"
+                                                          )
+                                                  }
+                                          )
+                                  )
+                                  @RequestBody CustomerDto customer) {
+    return facade.updateCustomer(id, customer);
+}
+
+@Operation(summary = "Get customers by name", description = "Retrieve a list of customers by their name")
+@GetMapping("/name/{name}")
+public List<CustomerDto> getCustomerByName(@PathVariable String name) {
+    return facade.getCustomersByName(name);
+}
 }
