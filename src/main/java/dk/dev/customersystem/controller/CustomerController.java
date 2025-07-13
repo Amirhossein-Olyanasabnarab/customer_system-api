@@ -67,6 +67,7 @@ public class CustomerController {
         CustomerDto customerDto = facade.getCustomerById(id);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(customerDto);
+
     }
 
     @Operation(summary = "Delete a customer by id", description = "Remove a customer from customer system")
