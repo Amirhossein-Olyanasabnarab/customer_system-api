@@ -63,6 +63,10 @@ public class CustomerService {
     }
 
     public List<Customer> findByName(String name) {
-        return customerDao.findByNameIgnoreCase(name);
+        List<Customer> customers = customerDao.findByNameIgnoreCase(name);
+        if (customers.isEmpty()){
+            throw new CustomerNotFoundException("Customer with name " + name + " not found");
+        }else
+            return customers;
     }
 }

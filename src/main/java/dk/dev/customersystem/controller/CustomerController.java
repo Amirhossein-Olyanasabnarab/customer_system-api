@@ -87,15 +87,15 @@ public class CustomerController {
             )
     })
     public ResponseEntity<?> deleteCustomer(@PathVariable Long id) {
-       try{
-           facade.deleteCustomer(id);
-           return ResponseEntity.status(HttpStatus.OK)
-                   .body("Customer deleted successfully");
-       }catch (CustomerNotFoundException exception){
-           return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                   .body(new dk.dev.customersystem.dto.ErrorResponse(HttpStatus.NOT_FOUND.value(),
-                           exception.getMessage()));
-       }
+        try {
+            facade.deleteCustomer(id);
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body("Customer deleted successfully");
+        } catch (CustomerNotFoundException exception) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new dk.dev.customersystem.dto.ErrorResponse(HttpStatus.NOT_FOUND.value(),
+                            exception.getMessage()));
+        }
     }
 
 
@@ -222,9 +222,9 @@ public class CustomerController {
                     )
             ),
             @ApiResponse(responseCode = "404",
-                description = "No customers found with the given name",content = @Content(
-                        mediaType = "application/json",
-                        schema = @Schema(implementation = ErrorResponse.class),
+                    description = "No customers found with the given name", content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ErrorResponse.class),
                     examples = {
                             @ExampleObject(
                                     name = "Real Customer Example",
@@ -247,16 +247,17 @@ public class CustomerController {
                                             + "}"
                             )
                     }
-                )
+            )
             )
     })
     public ResponseEntity<?> getCustomerByName(@PathVariable String name) {
-        List<CustomerDto> customers = facade.getCustomersByName(name);
-        if (customers.isEmpty()) {
+        try {
+            List<CustomerDto> customers = facade.getCustomersByName(name);
+            return ResponseEntity.status(HttpStatus.OK).body(customers);
+        }catch (CustomerNotFoundException exception){
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("No customers were found with the name of " + name);
+                    .body(new dk.dev.customersystem.dto.ErrorResponse(HttpStatus.NOT_FOUND.value(),
+                            exception.getMessage()));
         }
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(customers);
     }
 }
