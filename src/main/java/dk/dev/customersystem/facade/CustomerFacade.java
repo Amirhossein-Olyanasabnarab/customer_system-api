@@ -34,8 +34,8 @@ public class CustomerFacade {
     }
 
 
-    public boolean deleteCustomer(Long id) {
-        return customerService.deleteCustomer(id);
+    public void deleteCustomer(Long id) {
+        customerService.deleteCustomer(id);
     }
 
     public CustomerDto getCustomerById(Long id) {

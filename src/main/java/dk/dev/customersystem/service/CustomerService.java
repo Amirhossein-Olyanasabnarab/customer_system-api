@@ -2,6 +2,7 @@ package dk.dev.customersystem.service;
 
 import dk.dev.customersystem.dao.CustomerDao;
 import dk.dev.customersystem.enums.CustomerType;
+import dk.dev.customersystem.exception.CustomerNotFoundException;
 import dk.dev.customersystem.model.Customer;
 import dk.dev.customersystem.model.RealCustomer;
 import jakarta.annotation.PostConstruct;
@@ -46,12 +47,11 @@ public class CustomerService {
         return null;
     }
 
-    public boolean deleteCustomer(Long id) {
+    public void deleteCustomer(Long id) {
         if (customerDao.existsById(id)) {
             customerDao.deleteById(id);
-            return true;
-        }
-        return false;
+        }else
+            throw new CustomerNotFoundException("Customer with id " + id + " not found");
     }
 
     public List<Customer> getAllCustomers() {

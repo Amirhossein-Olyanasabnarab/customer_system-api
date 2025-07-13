@@ -85,14 +85,16 @@ public class CustomerController {
                     )
             )
     })
-    public ResponseEntity<String> deleteCustomer(@PathVariable Long id) {
-        boolean isDeleted = facade.deleteCustomer(id);
-        if (isDeleted) {
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body("Customer deleted successfully");
-        } else
-            return ResponseEntity.status(HttpStatus.NO_CONTENT)
-                    .body("Customer not deleted successfully");
+    public ResponseEntity<?> deleteCustomer(@PathVariable Long id) {
+       try{
+           facade.deleteCustomer(id);
+           return ResponseEntity.status(HttpStatus.OK)
+                   .body("Customer deleted successfully");
+       }catch (CustomerNotFoundException exception){
+           return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                   .body(new dk.dev.customersystem.dto.ErrorResponse(HttpStatus.NOT_FOUND.value(),
+                           exception.getMessage()));
+       }
     }
 
 

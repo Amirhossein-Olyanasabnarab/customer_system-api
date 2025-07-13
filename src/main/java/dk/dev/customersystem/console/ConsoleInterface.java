@@ -70,8 +70,12 @@ public class ConsoleInterface {
     private void deleteCustomer() {
         System.out.println("Please enter customer Id for deleting customer:");
         Long id = Long.parseLong(scanner.nextLine());
-        boolean isDelete = facade.deleteCustomer(id);
-        System.out.println(isDelete ? "Customer deleted successfully!" : "Customer could not be deleted!");
+        try{
+            facade.deleteCustomer(id);
+            System.out.println("Customer deleted successfully");
+        }catch (CustomerNotFoundException exception){
+            System.out.println(exception.getMessage());
+        }
     }
 
     private void updateCustomer() {
