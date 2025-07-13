@@ -64,13 +64,9 @@ public class CustomerController {
                     ))
     })
     public ResponseEntity<?> getCustomerById(@PathVariable Long id) {
-        try {
-            CustomerDto customerDto = facade.getCustomerById(id);
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(customerDto);
-        } catch (CustomerNotFoundException e) {
-            return getErrorResponse(e);
-        }
+        CustomerDto customerDto = facade.getCustomerById(id);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(customerDto);
     }
 
     @Operation(summary = "Delete a customer by id", description = "Remove a customer from customer system")
@@ -85,13 +81,9 @@ public class CustomerController {
             )
     })
     public ResponseEntity<?> deleteCustomer(@PathVariable Long id) {
-        try {
-            facade.deleteCustomer(id);
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body("Customer deleted successfully");
-        } catch (CustomerNotFoundException exception) {
-            return getErrorResponse(exception);
-        }
+        facade.deleteCustomer(id);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body("Customer deleted successfully");
     }
 
 
@@ -247,17 +239,9 @@ public class CustomerController {
             )
     })
     public ResponseEntity<?> getCustomerByName(@PathVariable String name) {
-        try {
-            List<CustomerDto> customers = facade.getCustomersByName(name);
-            return ResponseEntity.status(HttpStatus.OK).body(customers);
-        }catch (CustomerNotFoundException exception){
-            return getErrorResponse(exception);
-        }
+        List<CustomerDto> customers = facade.getCustomersByName(name);
+        return ResponseEntity.status(HttpStatus.OK).body(customers);
     }
 
-    private static ResponseEntity<dk.dev.customersystem.dto.ErrorResponse> getErrorResponse(CustomerNotFoundException exception) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(new dk.dev.customersystem.dto.ErrorResponse(HttpStatus.NOT_FOUND.value(),
-                        exception.getMessage()));
-    }
+
 }
