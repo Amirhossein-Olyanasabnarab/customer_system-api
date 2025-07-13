@@ -69,9 +69,7 @@ public class CustomerController {
             return ResponseEntity.status(HttpStatus.OK)
                     .body(customerDto);
         } catch (CustomerNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new dk.dev.customersystem.dto.ErrorResponse(HttpStatus.NOT_FOUND.value(),
-                            e.getMessage()));
+            return getErrorResponse(e);
         }
     }
 
@@ -92,9 +90,7 @@ public class CustomerController {
             return ResponseEntity.status(HttpStatus.OK)
                     .body("Customer deleted successfully");
         } catch (CustomerNotFoundException exception) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new dk.dev.customersystem.dto.ErrorResponse(HttpStatus.NOT_FOUND.value(),
-                            exception.getMessage()));
+            return getErrorResponse(exception);
         }
     }
 
@@ -255,9 +251,13 @@ public class CustomerController {
             List<CustomerDto> customers = facade.getCustomersByName(name);
             return ResponseEntity.status(HttpStatus.OK).body(customers);
         }catch (CustomerNotFoundException exception){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new dk.dev.customersystem.dto.ErrorResponse(HttpStatus.NOT_FOUND.value(),
-                            exception.getMessage()));
+            return getErrorResponse(exception);
         }
+    }
+
+    private static ResponseEntity<dk.dev.customersystem.dto.ErrorResponse> getErrorResponse(CustomerNotFoundException exception) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new dk.dev.customersystem.dto.ErrorResponse(HttpStatus.NOT_FOUND.value(),
+                        exception.getMessage()));
     }
 }
