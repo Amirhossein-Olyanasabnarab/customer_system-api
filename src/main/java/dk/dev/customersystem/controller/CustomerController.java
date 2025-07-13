@@ -70,7 +70,8 @@ public class CustomerController {
                     .body(customerDto);
         } catch (CustomerNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(e.getMessage());
+                    .body(new dk.dev.customersystem.dto.ErrorResponse(HttpStatus.NOT_FOUND.value(),
+                            e.getMessage()));
         }
     }
 
