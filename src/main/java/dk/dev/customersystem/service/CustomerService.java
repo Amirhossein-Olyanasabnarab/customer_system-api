@@ -3,6 +3,7 @@ package dk.dev.customersystem.service;
 import dk.dev.customersystem.dao.CustomerDao;
 import dk.dev.customersystem.enums.CustomerType;
 import dk.dev.customersystem.exception.CustomerNotFoundException;
+import dk.dev.customersystem.exception.DuplicatedCustomerException;
 import dk.dev.customersystem.model.Customer;
 import dk.dev.customersystem.model.RealCustomer;
 import jakarta.annotation.PostConstruct;
@@ -36,6 +37,9 @@ public class CustomerService {
 //    }
 
     public Customer addCustomer(Customer customer) {
+        if (customerDao.existsByNameIgnoreCaseAndFamilyIgnoreCase(customer.getName(), customer.getFamily())) {
+            throw new DuplicatedCustomerException("Customer with full name " + customer.getName() + " " + customer.getFamily() +" already exists");
+        }
         return customerDao.save(customer);
     }
 

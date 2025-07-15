@@ -198,4 +198,9 @@ public class CustomerJdbcDao implements CustomerDao {
         Integer count = jdbc.queryForObject(customerSql, Integer.class, id);
         return count != null && count > 0;
     }
+
+    @Override
+    public boolean existsByNameIgnoreCaseAndFamilyIgnoreCase(String name, String family) {
+        return false;
+    }
 }

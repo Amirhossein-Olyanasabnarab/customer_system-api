@@ -64,4 +64,9 @@ public class CustomerInMemoryDao implements CustomerDao {
         }else
             return customers.containsKey(id);
     }
+
+    @Override
+    public boolean existsByNameIgnoreCaseAndFamilyIgnoreCase(String name, String family) {
+        return false;
+    }
 }
