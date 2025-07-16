@@ -7,6 +7,7 @@ import dk.dev.customersystem.dto.LegalCustomerDto;
 import dk.dev.customersystem.dto.RealCustomerDto;
 import dk.dev.customersystem.enums.CustomerType;
 import dk.dev.customersystem.exception.CustomerNotFoundException;
+import dk.dev.customersystem.exception.DuplicatedCustomerException;
 import dk.dev.customersystem.facade.CustomerFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -44,19 +45,23 @@ public class ConsoleInterface {
 
             int choice = Integer.parseInt(scanner.nextLine());
 
-            switch (choice) {
-                case 1 -> viewAllCustomers();
-                case 2 -> viewCustomerById();
-                case 3 -> addCustomer();
-                case 4 -> updateCustomer();
-                case 5 -> deleteCustomer();
-                case 6 -> findCustomerByName();
-                case 0 -> {
-                    System.out.println("Exiting...");
-                    return;
-                }
-                default -> System.out.println("Invalid choice. Please try again.");
-            }
+           try {
+               switch (choice) {
+                   case 1 -> viewAllCustomers();
+                   case 2 -> viewCustomerById();
+                   case 3 -> addCustomer();
+                   case 4 -> updateCustomer();
+                   case 5 -> deleteCustomer();
+                   case 6 -> findCustomerByName();
+                   case 0 -> {
+                       System.out.println("Exiting...");
+                       return;
+                   }
+                   default -> System.out.println("Invalid choice. Please try again.");
+               }
+           }catch (CustomerNotFoundException | DuplicatedCustomerException exception){
+               System.out.println(exception.getMessage());
+           }
         }
     }
 

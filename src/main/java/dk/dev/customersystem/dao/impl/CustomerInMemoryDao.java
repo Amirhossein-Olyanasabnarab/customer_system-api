@@ -67,6 +67,9 @@ public class CustomerInMemoryDao implements CustomerDao {
 
     @Override
     public boolean existsByNameIgnoreCaseAndFamilyIgnoreCase(String name, String family) {
-        return false;
+        return customers.values()
+                .stream()
+                .anyMatch(customer -> customer.getName().equalsIgnoreCase(name)
+                && customer.getFamily().equalsIgnoreCase(family));
     }
 }
