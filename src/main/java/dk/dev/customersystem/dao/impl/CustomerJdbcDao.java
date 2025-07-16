@@ -201,6 +201,8 @@ public class CustomerJdbcDao implements CustomerDao {
 
     @Override
     public boolean existsByNameIgnoreCaseAndFamilyIgnoreCase(String name, String family) {
-        return false;
+        String sql = "SELECT COUNT(*) FROM customer WHERE LOWER(name) = LOWER(?) AND LOWER(family) = LOWER(?) ";
+        Integer count = jdbc.queryForObject(sql, Integer.class, name, family);
+        return count != null && count > 0;
     }
 }
