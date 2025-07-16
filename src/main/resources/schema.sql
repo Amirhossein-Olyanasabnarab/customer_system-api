@@ -1,7 +1,7 @@
 CREATE TABLE customer(
     id BIGINT AUTO_INCREMENT PRIMARY KEY ,
-    name  VARCHAR(30),
-    family VARCHAR(50),
+    name  VARCHAR(30) NOT NULL ,
+    family VARCHAR(50) NOT NULL ,
     phone_number VARCHAR(25),
     type VARCHAR(10)
 );
