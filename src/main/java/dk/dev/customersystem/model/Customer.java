@@ -42,7 +42,9 @@ public abstract class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
     private String name;
+    @Column(nullable = false)
     private String family;
     @Column(name = "phone_number")
     private String phoneNumber;
