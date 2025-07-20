@@ -5,6 +5,9 @@ import dk.dev.customersystem.enums.CustomerType;
 import dk.dev.customersystem.model.Customer;
 import dk.dev.customersystem.model.LegalCustomer;
 import dk.dev.customersystem.model.RealCustomer;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
@@ -17,6 +20,7 @@ import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 @Primary
@@ -25,10 +29,12 @@ public class CustomerJdbcDao implements CustomerDao {
 
 
     private final JdbcTemplate jdbc;
+    private final Validator validator;
 
     @Autowired
-    public CustomerJdbcDao(JdbcTemplate jdbc) {
+    public CustomerJdbcDao(JdbcTemplate jdbc, Validator validator) {
         this.jdbc = jdbc;
+        this.validator = validator;
     }
 
     private Customer insert(Customer customer) {
@@ -75,6 +81,10 @@ public class CustomerJdbcDao implements CustomerDao {
 
     @Override
     public Customer save(Customer customer) {
+        Set<ConstraintViolation<Customer>> violations = validator.validate(customer);
+        if (!violations.isEmpty()) {
+            throw new ConstraintViolationException(violations);
+        }
         if (existsById(customer.getId())) {
             return update(customer);
         } else {
