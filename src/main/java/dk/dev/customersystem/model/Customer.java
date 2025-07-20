@@ -13,6 +13,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,10 +45,17 @@ public abstract class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotEmpty(message = "name can not be empty.")
+    @NotNull
     @Column(nullable = false)
     private String name;
+
+    @NotEmpty(message = "family can not be empty.")
+    @NotNull
     @Column(nullable = false)
     private String family;
+
     @Column(name = "phone_number")
     private String phoneNumber;
     @Enumerated(EnumType.STRING)
