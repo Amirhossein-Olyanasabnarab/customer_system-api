@@ -3,12 +3,15 @@ package dk.dev.customersystem.controller;
 import dk.dev.customersystem.dto.ErrorResponse;
 import dk.dev.customersystem.exception.CustomerNotFoundException;
 import dk.dev.customersystem.exception.DuplicatedCustomerException;
+import jakarta.validation.ConstraintViolationException;
 import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException;
 import org.hibernate.PropertyValueException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -40,6 +43,18 @@ public class GlobalExceptionHandler {
                 exception.getLocalizedMessage()
                         .replaceAll("\\b[a-zA-Z0-9_]+(\\.[a-zA-Z0-9_]+)*\\.([A-Z][a-zA-Z0-9_]+)",
                                 "$2"));
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorResponse> handleConstraintViolationException(ConstraintViolationException exception){
+        String message = exception.getConstraintViolations()
+                .stream()
+                .map(violation -> "Property: " + violation.getPropertyPath() + " ,Message :" + violation.getMessage())
+                .collect(Collectors.joining(", "));
+
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(),
+                "Validation error: " + message);
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
