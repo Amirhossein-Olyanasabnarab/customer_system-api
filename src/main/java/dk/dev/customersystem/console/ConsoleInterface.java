@@ -9,20 +9,22 @@ import dk.dev.customersystem.enums.CustomerType;
 import dk.dev.customersystem.exception.CustomerNotFoundException;
 import dk.dev.customersystem.exception.DuplicatedCustomerException;
 import dk.dev.customersystem.facade.CustomerFacade;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 @Component
 @Profile("console")
 public class ConsoleInterface {
 
-   private final CustomerFacade facade;
-   private final Scanner scanner;
-   private final ObjectMapper objectMapper;
+    private final CustomerFacade facade;
+    private final Scanner scanner;
+    private final ObjectMapper objectMapper;
 
     @Autowired
     public ConsoleInterface(CustomerFacade facade, ObjectMapper objectMapper) {
@@ -45,23 +47,30 @@ public class ConsoleInterface {
 
             int choice = Integer.parseInt(scanner.nextLine());
 
-           try {
-               switch (choice) {
-                   case 1 -> viewAllCustomers();
-                   case 2 -> viewCustomerById();
-                   case 3 -> addCustomer();
-                   case 4 -> updateCustomer();
-                   case 5 -> deleteCustomer();
-                   case 6 -> findCustomerByName();
-                   case 0 -> {
-                       System.out.println("Exiting...");
-                       return;
-                   }
-                   default -> System.out.println("Invalid choice. Please try again.");
-               }
-           }catch (CustomerNotFoundException | DuplicatedCustomerException exception){
-               System.out.println(exception.getMessage());
-           }
+            try {
+                switch (choice) {
+                    case 1 -> viewAllCustomers();
+                    case 2 -> viewCustomerById();
+                    case 3 -> addCustomer();
+                    case 4 -> updateCustomer();
+                    case 5 -> deleteCustomer();
+                    case 6 -> findCustomerByName();
+                    case 0 -> {
+                        System.out.println("Exiting...");
+                        return;
+                    }
+                    default -> System.out.println("Invalid choice. Please try again.");
+                }
+            } catch (CustomerNotFoundException | DuplicatedCustomerException exception) {
+                System.out.println(exception.getMessage());
+            } catch (ConstraintViolationException ex) {
+                String message = ex.getConstraintViolations().stream()
+                        .map(violation -> "Property: " + violation.getPropertyPath() + ", Message: " + violation.getMessage())
+                        .collect(Collectors.joining("\n "));
+                System.out.println("Validation error: " + message);
+            } catch (Exception e) {
+                System.out.println("An unexpected error occurred!");
+            }
         }
     }
 
@@ -75,10 +84,10 @@ public class ConsoleInterface {
     private void deleteCustomer() {
         System.out.println("Please enter customer Id for deleting customer:");
         Long id = Long.parseLong(scanner.nextLine());
-        try{
+        try {
             facade.deleteCustomer(id);
             System.out.println("Customer deleted successfully");
-        }catch (CustomerNotFoundException exception){
+        } catch (CustomerNotFoundException exception) {
             System.out.println(exception.getMessage());
         }
     }
@@ -87,7 +96,7 @@ public class ConsoleInterface {
         System.out.print("Enter customer ID to update: ");
         Long id = Long.parseLong(scanner.nextLine());
         CustomerDto customer = facade.getCustomerById(id);
-        if(customer == null){
+        if (customer == null) {
             System.out.println("Customer not found.");
         } else if (CustomerType.REAL.equals(customer.getType())) {
             RealCustomerDto realCustomer = (RealCustomerDto) customer;
@@ -172,7 +181,7 @@ public class ConsoleInterface {
         try {
             CustomerDto customer = facade.getCustomerById(id);
             printJsonObject(customer);
-        }catch (CustomerNotFoundException e){
+        } catch (CustomerNotFoundException e) {
             System.out.println(e.getMessage());
         }
     }
