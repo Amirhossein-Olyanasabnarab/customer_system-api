@@ -3,7 +3,6 @@ package dk.dev.customersystem.controller;
 import dk.dev.customersystem.dto.CustomerDto;
 import dk.dev.customersystem.dto.LegalCustomerDto;
 import dk.dev.customersystem.dto.RealCustomerDto;
-import dk.dev.customersystem.exception.CustomerNotFoundException;
 import dk.dev.customersystem.facade.CustomerFacade;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
