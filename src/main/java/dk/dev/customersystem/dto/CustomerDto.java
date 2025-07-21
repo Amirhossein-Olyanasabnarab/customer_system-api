@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import dk.dev.customersystem.enums.CustomerType;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,9 +35,11 @@ public abstract class CustomerDto {
     private Long id;
 
     @Schema(description = "Name of the customer", example = "John")
+    @NotNull(message = "Name can not be empty.")
     private String name;
 
     @Schema(description = "Family of the customer", example = "Doe")
+    @NotNull(message = "Family can not be empty.")
     private String family;
 
     @Schema(description = "Phone number of the customer", example = "1234567890")
