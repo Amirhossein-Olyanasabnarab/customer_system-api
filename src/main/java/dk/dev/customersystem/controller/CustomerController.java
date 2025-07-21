@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -63,7 +64,7 @@ public class CustomerController {
                             schema = @Schema(implementation = ErrorResponse.class)
                     ))
     })
-    public ResponseEntity<?> getCustomerById(@PathVariable Long id) {
+    public ResponseEntity<?> getCustomerById(@PathVariable @Positive(message = "The Id must be positive.") Long id) {
         CustomerDto customerDto = facade.getCustomerById(id);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(customerDto);
